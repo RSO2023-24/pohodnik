@@ -13,7 +13,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import si.fri.rso.pohodnik.version.lib.User;
 import si.fri.rso.pohodnik.version.services.beans.UserBean;
 import si.fri.rso.pohodnik.version.services.beans.MetricsService;
-
+import com.kumuluz.ee.logs.cdi.Log;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -24,6 +24,7 @@ import javax.ws.rs.core.UriInfo;
 import java.util.List;
 import java.util.logging.Logger;
 
+@Log
 @ApplicationScoped
 @Path("/users")
 @Produces(MediaType.APPLICATION_JSON)
