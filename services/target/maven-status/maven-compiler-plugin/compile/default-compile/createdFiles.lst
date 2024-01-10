@@ -1,2 +1,3 @@
-si\fri\rso\pohodnik\version\services\beans\UserBean.class
+si\fri\rso\pohodnik\version\services\beans\MetricsService.class
 si\fri\rso\pohodnik\version\services\producers\PersistenceProducer.class
+si\fri\rso\pohodnik\version\services\beans\UserBean.class

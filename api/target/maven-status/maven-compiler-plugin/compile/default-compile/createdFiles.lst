@@ -1,2 +1,3 @@
 si\fri\rso\pohodnik\version\api\v1\UserApplication.class
+si\fri\rso\pohodnik\version\api\v1\interceptors\LogContextInterceptor.class
 si\fri\rso\pohodnik\version\api\v1\resources\UserResource.class

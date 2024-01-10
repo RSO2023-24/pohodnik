@@ -1,24 +1,19 @@
 kumuluzee:
-  name: image-catalog-service
+  name: pohodnik-service
   env:
     name: dev
   version: 1.0.0
   server:
-    base-url: http://localhost:8080
+    base-url: http://localhost:8082
     http:
-      port: 8080
+      port: 8082
   datasources:
-    - jndi-name: jdbc/ImageMetadataDS
-      connection-url: jdbc:postgresql://localhost:5432/image-metadata
+    - jndi-name: jdbc/pohodnikDS
+      connection-url: jdbc:postgresql://localhost:5432/pohodnik
       username: dbuser
       password: postgres
       pool:
         max-size: 4
-  dev:
-    scan-libraries:
-      - image-catalog-models
-      - image-catalog-services
-      - image-catalog-lib
   openapi-mp:
     extension:
       enabled: true
@@ -31,7 +26,7 @@ kumuluzee:
     checks:
       data-source-health-check:
         type: liveness
-        jndi-name: jdbc/ImageMetadataDS
+        jndi-name: jdbc/pohodnikDS
       disk-space-health-check:
         threshold: 100000000
         type: liveness
