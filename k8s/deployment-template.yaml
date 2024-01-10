@@ -21,7 +21,7 @@ spec:
             - name: KUMULUZEE_DATASOURCES0_USERNAME
               value: mfyrfjbx
             - name: KUMULUZEE_DATASOURCES0_PASSWORD
-              #value:
+              value: 92KbE-pGhoSIRgLWeQmMHp5oyAk_wCjO
               valueFrom: #use Kubernetes secret for storing the password
                # secretKeyRef: 
                 ## key: #to be added
@@ -32,14 +32,14 @@ spec:
             httpGet:
               path: /health/live
               port: server
-            initialDelaySeconds: 15
-            periodSeconds: 20
+            initialDelaySeconds: 20
+            periodSeconds: 3
           readinessProbe:
             httpGet:
               path: /health/ready
               port: server
-            initialDelaySeconds: 5
-            periodSeconds: 10
+            initialDelaySeconds: 20
+            periodSeconds: 3
 
 ---
 

@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.utils.JPAUtils;
+import org.eclipse.microprofile.metrics.annotation.Timed;
 
 import si.fri.rso.pohodnik.version.lib.User;
 import si.fri.rso.pohodnik.version.models.converters.UserConverter;
@@ -36,7 +37,7 @@ public class UserBean {
         return resultList.stream().map(UserConverter::toDto).collect(Collectors.toList());
 
     }
-
+    @Timed
     public List<User> getUserFilter(UriInfo uriInfo) {
 
         QueryParameters queryParameters = QueryParameters.query(uriInfo.getRequestUri().getQuery()).defaultOffset(0)
