@@ -44,7 +44,12 @@
                 <artifactId>kumuluzee-rest-core</artifactId>
                 <version>${kumuluzee-rest.version}</version>
             </dependency>
-
+            
+            <dependency>
+                <groupId>com.kumuluz.ee.metrics</groupId>
+                <artifactId>kumuluzee-metrics-core</artifactId>
+                <version>${kumuluzee-metrics.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.postgresql</groupId>
@@ -80,6 +85,7 @@
                 <artifactId>image-catalog-models</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>si.fri.rso.pohodnik</groupId>
                 <artifactId>image-catalog-services</artifactId>
@@ -89,6 +95,24 @@
                 <groupId>si.fri.rso.pohodnik</groupId>
                 <artifactId>image-catalog-lib</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.kumuluz.ee.logs</groupId>
+                <artifactId>kumuluzee-logs-log4j2</artifactId>
+                <version>1.4.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>2.14.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.microprofile.metrics</groupId>
+                <artifactId>microprofile-metrics-api</artifactId>
+                <version>2.3</version>
+                <scope>provided</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

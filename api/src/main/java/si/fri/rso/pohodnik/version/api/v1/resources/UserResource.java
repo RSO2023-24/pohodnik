@@ -12,6 +12,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 
 import si.fri.rso.pohodnik.version.lib.User;
 import si.fri.rso.pohodnik.version.services.beans.UserBean;
+import si.fri.rso.pohodnik.version.services.beans.MetricsService;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -23,8 +24,6 @@ import javax.ws.rs.core.UriInfo;
 import java.util.List;
 import java.util.logging.Logger;
 
-
-
 @ApplicationScoped
 @Path("/users")
 @Produces(MediaType.APPLICATION_JSON)
@@ -34,123 +33,95 @@ public class UserResource {
     private Logger log = Logger.getLogger(UserResource.class.getName());
 
     @Inject
-    private UserBean UserBean;
+    private UserBean userBean;
 
+    @Inject
+    private MetricsService metricsService;
 
     @Context
     protected UriInfo uriInfo;
 
-    @Operation(description = "Get all image metadata.", summary = "Get all metadata")
-    @APIResponses({
-            @APIResponse(responseCode = "200",
-                    description = "List of image metadata",
-                    content = @Content(schema = @Schema(implementation = User.class, type = SchemaType.ARRAY)),
-                    headers = {@Header(name = "X-Total-Count", description = "Number of objects in list")}
-            )})
     @GET
+    @Operation(summary = "Get list of users", description = "Returns list of all users.")
+    @APIResponses({
+        @APIResponse(responseCode = "200", description = "List of users",
+            content = @Content(schema = @Schema(implementation = User.class, type = SchemaType.ARRAY))),
+        @APIResponse(responseCode = "204", description = "No users found")
+    })
     public Response getUser() {
-
-        List<User> User = UserBean.getUserFilter(uriInfo);
-
-        return Response.status(Response.Status.OK).entity(User).build();
+        List<User> user = userBean.getUserFilter(uriInfo);
+        metricsService.incrementActiveUsers();
+        return Response.status(Response.Status.OK).entity(user).build();
     }
 
-
-    @Operation(description = "Get metadata for an image.", summary = "Get metadata for an image")
-    @APIResponses({
-            @APIResponse(responseCode = "200",
-                    description = "Image metadata",
-                    content = @Content(
-                            schema = @Schema(implementation = User.class))
-            )})
     @GET
     @Path("/{UserId}")
-    public Response getUser(@Parameter(description = "Metadata ID.", required = true)
-                                     @PathParam("UserId") Integer UserId) {
-
-        User User = UserBean.getUser(UserId);
-
-        if (User == null) {
+    @Operation(summary = "Get user by ID", description = "Returns user with the given ID.")
+    @APIResponses({
+        @APIResponse(responseCode = "200", description = "User details",
+            content = @Content(schema = @Schema(implementation = User.class))),
+        @APIResponse(responseCode = "404", description = "User not found")
+    })
+    public Response getUser(@Parameter(description = "User ID.", required = true)
+                            @PathParam("UserId") Integer UserId) {
+        User user = userBean.getUser(UserId);
+        if (user == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-
-        return Response.status(Response.Status.OK).entity(User).build();
+        metricsService.incrementActiveUsers();
+        return Response.status(Response.Status.OK).entity(user).build();
     }
 
-    @Operation(description = "Add image metadata.", summary = "Add metadata")
-    @APIResponses({
-            @APIResponse(responseCode = "201",
-                    description = "Metadata successfully added."
-            ),
-            @APIResponse(responseCode = "405", description = "Validation error .")
-    })
     @POST
-    public Response createUser(@RequestBody(
-            description = "DTO object with image metadata.",
-            required = true, content = @Content(
-            schema = @Schema(implementation = User.class))) User User) {
-
-        if ((User.getfirstName() == null || User.getlastName() == null || User.getskill() == null)) {
+    @Operation(summary = "Create a new user", description = "Creates a new user with the given details.")
+    @APIResponses({
+        @APIResponse(responseCode = "201", description = "User created",
+            content = @Content(schema = @Schema(implementation = User.class))),
+        @APIResponse(responseCode = "400", description = "Invalid user details provided")
+    })
+    public Response createUser(@RequestBody(description = "User details", required = true,
+            content = @Content(schema = @Schema(implementation = User.class))) User user) {
+        if ((user.getfirstName() == null || user.getlastName() == null || user.getskill() == null)) {
             return Response.status(Response.Status.BAD_REQUEST).build();
+        } else {
+            user = userBean.createUser(user);
+            metricsService.incrementRegisteredUsers();
         }
-        else {
-            User = UserBean.createUser(User);
-        }
-
-        return Response.status(Response.Status.CONFLICT).entity(User).build();
-
+        return Response.status(Response.Status.CONFLICT).entity(user).build();
     }
 
-
-    @Operation(description = "Update metadata for an image.", summary = "Update metadata")
-    @APIResponses({
-            @APIResponse(
-                    responseCode = "200",
-                    description = "Metadata successfully updated."
-            )
-    })
     @PUT
     @Path("{UserId}")
-    public Response putUser(@Parameter(description = "Metadata ID.", required = true)
-                                     @PathParam("UserId") Integer UserId,
-                                     @RequestBody(
-                                             description = "DTO object with image metadata.",
-                                             required = true, content = @Content(
-                                             schema = @Schema(implementation = User.class)))
-                                             User User){
-
-        User = UserBean.putUser(UserId, User);
-
-        if (User == null) {
+    @Operation(summary = "Update a user", description = "Updates the details of an existing user.")
+    @APIResponses({
+        @APIResponse(responseCode = "200", description = "User updated",
+            content = @Content(schema = @Schema(implementation = User.class))),
+        @APIResponse(responseCode = "404", description = "User not found")
+    })
+    public Response putUser(@Parameter(description = "User ID.", required = true)
+                            @PathParam("UserId") Integer UserId,
+                            @RequestBody(description = "Updated user details", required = true,
+            content = @Content(schema = @Schema(implementation = User.class))) User user){
+        user = userBean.putUser(UserId, user);
+        if (user == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-
         return Response.status(Response.Status.NOT_MODIFIED).build();
-
     }
 
-    @Operation(description = "Delete metadata for an image.", summary = "Delete metadata")
-    @APIResponses({
-            @APIResponse(
-                    responseCode = "200",
-                    description = "Metadata successfully deleted."
-            ),
-            @APIResponse(
-                    responseCode = "404",
-                    description = "Not found."
-            )
-    })
     @DELETE
     @Path("{UserId}")
-    public Response deleteUser(@Parameter(description = "Metadata ID.", required = true)
-                                        @PathParam("UserId") Integer UserId){
-
-        boolean deleted = UserBean.deleteUser(UserId);
-
+    @Operation(summary = "Delete a user", description = "Deletes a user with the given ID.")
+    @APIResponses({
+        @APIResponse(responseCode = "204", description = "User deleted"),
+        @APIResponse(responseCode = "404", description = "User not found")
+    })
+    public Response deleteUser(@Parameter(description = "User ID.", required = true)
+                               @PathParam("UserId") Integer UserId){
+        boolean deleted = userBean.deleteUser(UserId);
         if (deleted) {
             return Response.status(Response.Status.NO_CONTENT).build();
-        }
-        else {
+        } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
