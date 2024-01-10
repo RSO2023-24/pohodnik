@@ -12,7 +12,6 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 
 import si.fri.rso.pohodnik.version.lib.User;
 import si.fri.rso.pohodnik.version.services.beans.UserBean;
-import si.fri.rso.pohodnik.version.services.beans.MetricsService;
 import com.kumuluz.ee.logs.cdi.Log;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -36,9 +35,6 @@ public class UserResource {
     @Inject
     private UserBean userBean;
 
-    @Inject
-    private MetricsService metricsService;
-
     @Context
     protected UriInfo uriInfo;
 
@@ -51,7 +47,6 @@ public class UserResource {
     })
     public Response getUser() {
         List<User> user = userBean.getUserFilter(uriInfo);
-        metricsService.incrementActiveUsers();
         return Response.status(Response.Status.OK).entity(user).build();
     }
 
@@ -69,7 +64,7 @@ public class UserResource {
         if (user == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        metricsService.incrementActiveUsers();
+
         return Response.status(Response.Status.OK).entity(user).build();
     }
 
@@ -86,7 +81,6 @@ public class UserResource {
             return Response.status(Response.Status.BAD_REQUEST).build();
         } else {
             user = userBean.createUser(user);
-            metricsService.incrementRegisteredUsers();
         }
         return Response.status(Response.Status.CONFLICT).entity(user).build();
     }

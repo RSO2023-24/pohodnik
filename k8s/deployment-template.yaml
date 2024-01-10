@@ -13,7 +13,7 @@ spec:
         app: pohodnik
     spec:
       containers:
-        - image: pockar/pohodnik:latest
+        - image: pockar/pohodnik3:latest
           name: pohodnik
           env:
             - name: KUMULUZEE_DATASOURCES0_CONNECTIONURL
