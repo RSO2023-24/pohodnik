@@ -21,10 +21,10 @@ spec:
             - name: KUMULUZEE_DATASOURCES0_USERNAME
               value: mfyrfjbx
             - name: KUMULUZEE_DATASOURCES0_PASSWORD
-              value: 92KbE-pGhoSIRgLWeQmMHp5oyAk_wCjO
-              valueFrom: #use Kubernetes secret for storing the password
-               # secretKeyRef: 
-                ## key: #to be added
+              valueFrom:
+                secretKeyRef:
+                  name: pg-pass2
+                  key: password-hiker
           ports:
             - containerPort: 8082
               name: server
@@ -32,14 +32,14 @@ spec:
             httpGet:
               path: /health/live
               port: server
-            initialDelaySeconds: 20
-            periodSeconds: 3
+            initialDelaySeconds: 15
+            periodSeconds: 20
           readinessProbe:
             httpGet:
               path: /health/ready
               port: server
-            initialDelaySeconds: 20
-            periodSeconds: 3
+            initialDelaySeconds: 5
+            periodSeconds: 10
 
 ---
 

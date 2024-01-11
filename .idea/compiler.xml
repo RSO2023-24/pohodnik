@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="pohodnik-api" />
+        <module name="pohodnik-models" />
+        <module name="pohodnik-services" />
+        <module name="pohodnik-lib" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="image-catalog" target="17" />
+      <module name="image-catalog-api" target="17" />
+      <module name="image-catalog-lib" target="17" />
+      <module name="image-catalog-models" target="17" />
+      <module name="image-catalog-services" target="17" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
