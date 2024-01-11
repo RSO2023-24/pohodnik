@@ -52,7 +52,7 @@
         <dependency>
             <artifactId>kumuluzee-logs-log4j2</artifactId>
             <groupId>com.kumuluz.ee.logs</groupId>
-            <version>1.4.0</version>
+            <version>1.4.6</version>
         </dependency>
 
 

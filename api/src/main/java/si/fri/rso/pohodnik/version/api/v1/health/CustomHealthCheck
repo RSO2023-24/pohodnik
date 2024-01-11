@@ -7,6 +7,10 @@ import si.fri.rso.samples.imagecatalog.services.config.RestProperties;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 @Liveness
 @ApplicationScoped
@@ -15,6 +19,9 @@ public class CustomHealthCheck implements HealthCheck {
     @Inject
     private RestProperties restProperties;
 
+    @Inject
+    private DataSource dataSource; // Inject your DataSource here
+
     @Override
     public HealthCheckResponse call() {
         if (restProperties.getBroken()) {
@@ -22,6 +29,33 @@ public class CustomHealthCheck implements HealthCheck {
         }
         else {
             return HealthCheckResponse.up(CustomHealthCheck.class.getSimpleName());
+        }
+    }
+
+    @HealthCheck
+    public HealthCheckResponse checkDatabaseConnectivity() {
+        try (Connection connection = dataSource.getConnection()) {
+            return HealthCheckResponse.up("Database Connectivity Check");
+        } catch (Exception e) {
+            return HealthCheckResponse.down("Database Connectivity Check");
+        }
+    }
+
+    @HealthCheck
+    public HealthCheckResponse checkDatabasePopulation() {
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT COUNT(*) FROM image_metadata")) { // Replace with your table name
+
+            resultSet.next();
+            int count = resultSet.getInt(1);
+            if (count > 0) {
+                return HealthCheckResponse.up("Database Population Check");
+            } else {
+                return HealthCheckResponse.down("Database Population Check");
+            }
+        } catch (Exception e) {
+            return HealthCheckResponse.down("Database Population Check");
         }
     }
 }
