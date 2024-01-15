@@ -13,7 +13,7 @@ spec:
         app: pohodnik
     spec:
       containers:
-        - image: pockar/pohodnik2:latest
+        - image: pockar/pohodnik:latest
           name: pohodnik
           env:
             - name: KUMULUZEE_DATASOURCES0_CONNECTIONURL
@@ -23,8 +23,8 @@ spec:
             - name: KUMULUZEE_DATASOURCES0_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: pg-pass2
-                  key: password-hiker
+                  name: pg-pass-pohodnik
+                  key: password
           ports:
             - containerPort: 8082
               name: server
