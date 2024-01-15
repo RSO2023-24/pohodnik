@@ -81,8 +81,8 @@ public class UserResource {
             return Response.status(Response.Status.BAD_REQUEST).build();
         } else {
             user = userBean.createUser(user);
+            return Response.status(Response.Status.CREATED).entity(user).build();
         }
-        return Response.status(Response.Status.CONFLICT).entity(user).build();
     }
 
     @PUT
