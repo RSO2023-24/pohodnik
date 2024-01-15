@@ -116,12 +116,6 @@
             <dependency>
                 <groupId>com.kumuluz.ee.logs</groupId>
                 <artifactId>kumuluzee-logs-log4j2</artifactId>
-                <version>1.4.0</version>
-            </dependency>
-            
-            <dependency>
-                <artifactId>kumuluzee-logs-log4j2</artifactId>
-                <groupId>com.kumuluz.ee.logs</groupId>
                 <version>${kumuluzee-logs.version}</version>
             </dependency>
         </dependencies>
